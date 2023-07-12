@@ -41,6 +41,7 @@ def start_board(board):
     
     """
     board[1] = [black[5] for i in range(board_dim)]
+    board[6] = [white[5] for i in range(board_dim)]
      
         
     return print_grid(board)
