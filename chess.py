@@ -9,7 +9,7 @@ black = {0: "♚", 1: "♛", 2:"♝", 3: "♜", 4: "♞", 5: "♟︎"}
 
 
 def intro():
-    print("Welcome to my chess game! ")
+    print("Welcome to my chess game!")
     print()
     # ADD BASIC INSTRUCTIONS ON HOW TO PLAY!!!
     
