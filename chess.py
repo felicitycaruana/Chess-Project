@@ -1,7 +1,10 @@
 board_dim = 8
-letters = {1: "a", 2: "b",  3: "c", 4: "d", 5: "e", 6: "f",  7: "g", 8: "h"} 
+letters = {0: "a", 1: "b",  2: "c", 3: "d", 4: "e", 5: "f",  6: "g", 7: "h"} 
     #letters is a dictionary used when labelling the columns of the board
 
+lets_to_nums = {val: key for key, val in letters.items()}
+    #a dictionary that changes the keys in letters to the values
+        #for use in moving the chess pieces
 
 #white and black are dictionaries containing the chessmen for each player
 white = {0: "♔", 1: "♕", 2: "♗", 3: "♖", 4: "♘", 5: "♙"}    
@@ -10,10 +13,17 @@ black = {0: "♚", 1: "♛", 2:"♝", 3: "♜", 4: "♞", 5: "♟︎"}
 # this line is for usability in dark mode so the pieces are the correct colour
 white, black = black, white
 
+
 def intro():
     print("Welcome to my chess game!")
     print()
-    # ADD BASIC INSTRUCTIONS ON HOW TO PLAY!!!
+    print("The player with the white pieces is to go first.")
+    print()
+    print(f"Valid row numbers to enter are 1 to 8.")
+    print(f"Valid column labels to enter are a,b,c,d,e,f,g or h")
+    
+    #ADD INSTRUCTIONS ON HOW TO PLAY
+    
     
 def print_grid(board):
     """ 
@@ -32,7 +42,7 @@ def print_grid(board):
         
     print(" ", end= "\t")
     for i in range(len(board)):
-        print(letters[i + 1], end = "\t")
+        print(letters[i], end = "\t")
     print()
     
     
@@ -84,5 +94,69 @@ def init_board():
     return board
 
 
-intro()
-start_board(init_board())
+
+
+
+def main():
+    user_turn = "white" 
+    intro()
+    board = init_board()
+    start_board(board)
+    
+    while True: ## CAUTION THIS IS CURRENTLY AN ENDLESS LOOP ##
+        print()
+        print(f"It is currently {user_turn}'s move. Good luck!")
+        print()
+        
+        
+        piece_row = int(input("Enter the row of the chessman you want to move: "))
+        # this is a number
+        
+        piece_col_a = input("Enter the column of the chessman you want to move: ")
+        # this is a letter
+        
+        piece_col = int(lets_to_nums[piece_col_a])
+        # this is now a number
+        
+        
+        
+        move_row = int(input("Enter the row that you want to move your chessman to: "))
+        # this is a number
+        
+        move_col_a = input("Enter the column that you want to move your chessman to: ")
+        # this is a letter
+        
+        move_col = int(lets_to_nums[move_col_a])
+        # this is now a number
+        
+        
+        
+        
+        
+        
+        # check that we have correctly identified hte piece we want to move
+        print(f"The piece you want to move is {board[8 - piece_row][8 - piece_col]}")
+        
+        board[8 - move_row][8 - move_col] = board[8 - piece_row][8 - piece_col]
+        board[8 - piece_row][8 - piece_col] = "__"
+        
+        
+        print_grid(board)
+        
+       
+        break
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+if __name__ == "__main__":
+    main()
