@@ -1,2 +1,2 @@
 # Chess-Project
-SMP Programming Bootcamp chess project
+SMP Programming Bootcamp chess project :)
