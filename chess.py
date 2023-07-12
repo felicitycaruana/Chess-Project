@@ -28,9 +28,9 @@ def print_grid(board):
             print(board[i][j], end = " ")
         print()
         
-    print("  ", end= "")
+    print("  ", end= " ")
     for i in range(len(board)):
-        print(letters[i + 1], end = " ")
+        print(letters[i + 1], end = "  ")
     print()
     
     
