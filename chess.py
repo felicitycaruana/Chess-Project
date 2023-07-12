@@ -7,6 +7,8 @@ letters = {1: "a", 2: "b",  3: "c", 4: "d", 5: "e", 6: "f",  7: "g", 8: "h"}
 white = {0: "♔", 1: "♕", 2: "♗", 3: "♖", 4: "♘", 5: "♙"}    
 black = {0: "♚", 1: "♛", 2:"♝", 3: "♜", 4: "♞", 5: "♟︎"}
 
+# this line is for usability in dark mode so the pieces are the correct colour
+white, black = black, white
 
 def intro():
     print("Welcome to my chess game!")
@@ -22,15 +24,15 @@ def print_grid(board):
     """
     
     for i in range(len(board)):
-        print(8-i, end = " ")
+        print(8-i, end = "\t")
         
         for j in range(len(board[i])):
-            print(board[i][j], end = " ")
+            print(board[i][j], end = "\t")
         print()
         
-    print("  ", end= " ")
+    print(" ", end= "\t")
     for i in range(len(board)):
-        print(letters[i + 1], end = "  ")
+        print(letters[i + 1], end = "\t")
     print()
     
     
@@ -40,10 +42,36 @@ def start_board(board):
     starting board with all the pieces in the beginning positions
     
     """
+    #add the pawns to their starting position
     board[1] = [black[5] for i in range(board_dim)]
     board[6] = [white[5] for i in range(board_dim)]
-     
+    
+    #add the rooks
+    board[0][0] = black[3]
+    board[0][7] = black[3]
+    board[7][0] = white[3]
+    board[7][7] = white[3]
+    
+    #add the knights
+    board[0][1] = black[4]
+    board[0][6] = black[4]
+    board[7][1] = white[4]
+    board[7][6] = white[4]
         
+    #add the bishops
+    board[0][2] = black[2]
+    board[0][5] = black[2]
+    board[7][2] = white[2]
+    board[7][5] = white[2]
+    
+
+    #add the royals
+    board[0][3] = black[1]
+    board[0][4] = black[0]
+    board[7][3] = white[1]
+    board[7][4] = white[0]
+    
+    
     return print_grid(board)
 
 def init_board():
@@ -57,3 +85,4 @@ def init_board():
 
 
 intro()
+start_board(init_board())
