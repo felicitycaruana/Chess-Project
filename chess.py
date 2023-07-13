@@ -99,6 +99,7 @@ def main():
     while True:
         print()
         print(f"It is currently {user_turn}'s move. Good luck!")
+        print_grid(board)
         print()
         
         #this is a number
@@ -122,59 +123,58 @@ def main():
         move_col = int(lets_to_nums[move_col_a])
         
         
-        
-     
-        # this moves the piece to where the user wants 
-        # first the inputted row number must be converted to the actual index
-        board[8 - move_row][move_col] = board[8 - piece_row][piece_col]
-       
-        # this replaces the moved piece with a blank space 
-        # first the inputted row number must be converted to the actual index
-        board[8 - piece_row][piece_col] = "__"
-        
-        
         #ensure the move the player wants to make is allowed
-        if check_valid(board, move_row, move_col, user_turn, piece_row, piece_col) == False:
-            print("That is not a valid move sorry, please review the rules of chess.")
+        if error(board, move_row, move_col, user_turn, piece_row, piece_col) == False and path_clear(piece_row, move_row, board, piece_col, move_col):
+                #displays updated board
+                print_grid(board)
+                # this moves the piece to where the user wants 
+                # first the inputted row number must be converted to the actual index
+                board[8 - move_row][move_col] = board[8 - piece_row][piece_col]
+       
+                # this replaces the moved piece with a blank space 
+                # first the inputted row number must be converted to the actual index
+                board[8 - piece_row][piece_col] = "__"
+                
+                # alternates player turns
+                if user_turn == "white":
+                    user_turn = "black"
             
+                else:
+                    user_turn = "white"
         else:
-            #displays updated board
-            print_grid(board)
-      
-            # alternates player turns
-            if user_turn == "white":
-                user_turn = "black"
-            
-            else:
-                user_turn = "white"
-            
-            
+            print("Sorry that is not a valid move")
+                    
 
-
-def error_check(board, move_row, move_col, user_turn):
-    """this function will return False if a user places their piece onto 
+def error(board, move_row, move_col, user_turn, piece_row, piece_col):
+    """this function will return True if a user places their piece onto 
     another one of their pieces"""
     
-    if board[8 - move_row][move_col] in white.values() and user_turn == "white":
-        print("Sorry! One of your pieces is already there")
-        return False
+    if board[8 - move_row][move_col] in white.values() and board[8 - piece_row][piece_col] in white.values():
+        return True
             
-    elif board[8 - move_row][move_col] in black.values() and user_turn == "black":
-        print("Sorry! One of your pieces is already there")
-        return False
+    elif board[8 - move_row][move_col] in black.values() and board[8 - piece_col][piece_col] in black.values():
+        return True
     
-    return True
+    return False
 
-def path_clear(piece_row, move_row, board):
+def path_clear(piece_row, move_row, board, piece_col, move_col):
     """
-    This function returns true if the path between the chessman's current position
+    This function returns TRUE if the path between the chessman's current position
     and the one it wants to move to is clear.
     
+    CAUTION this only works for checking that a horizontal or vertical path is clear
+    
     """
-    for row in range(piece_row + 1, move_row):
-        if board[row]== "__":
-            return True
-    return False
+    # checks vertical path
+    if piece_row < move_row:
+        rows = [i for i in range(piece_row + 1, move_row + 1)]
+    else:
+        rows = [i for i in range(move_row + 1, piece_row + 1)]
+    for row in rows:
+        if board[8-row][move_col] != "__":            
+            return False
+        
+    return True
     
 
 
@@ -184,21 +184,21 @@ def rooks(board, move_row, move_col, user_turn, piece_row, piece_col):
     to an invalid position and True otherwise
     
     """
-    # check that the rook only moves horizontally or vertically
-    
-    if board[8 - piece_row][piece_col] == white[3] or board[8 - piece_row][piece_col] == black[3]:
-        if board[8 - piece_row]== board[8 - move_row]:
-            return  True
-    
-        elif board[8 - piece_col]== board[8 - move_col]:
-            return True
-    
     # check that the rook can't jump over existing pieces
-    if path_clear(piece_row, move_row, board):
-        True
+    if path_clear(piece_row, move_row, board, piece_col, move_col) == False:
+        return False
     
-    return False
-
+    else:
+    # check that the rook only moves horizontally or vertically
+         if board[8 - piece_row]== board[8 - move_row]:
+             return  True
+    
+         elif board[piece_col]== board[move_col]:
+             return True
+       
+         else:
+            return False
+    
 
 def check_valid(board, move_row, move_col, user_turn,piece_row, piece_col):
     """
@@ -206,16 +206,10 @@ def check_valid(board, move_row, move_col, user_turn,piece_row, piece_col):
     according to the rules of chess.
     
     """
-    if error_check(board, move_row, move_col, user_turn) == False:
-        return False
-    if rooks(board, move_row, move_col, user_turn, piece_row, piece_col) == False:
-        return False
-    
-    return True
     
     
-   
-
+    
+    
 
 
 if __name__ == "__main__":
