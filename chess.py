@@ -11,8 +11,6 @@ lets_to_nums = {val: key for key, val in letters.items()}
 white = {0: "♔", 1: "♕", 2: "♗", 3: "♖", 4: "♘", 5: "♙"}    
 black = {0: "♚", 1: "♛", 2:"♝", 3: "♜", 4: "♞", 5: "♟︎"}
 
-# this line is for usability in dark mode so the pieces are the correct colour
-white, black = black, white
 
 def intro():
     print("Welcome to my chess game!")
@@ -98,7 +96,7 @@ def main():
     board = init_board()
     start_board(board)
     
-    while True: ## CAUTION THIS IS CURRENTLY AN ENDLESS LOOP ##
+    while True:
         print()
         print(f"It is currently {user_turn}'s move. Good luck!")
         print()
@@ -111,7 +109,7 @@ def main():
         
         #converts to number
         piece_col = int(lets_to_nums[piece_col_a])
-        
+    
         
         
         # this is a number
@@ -124,6 +122,8 @@ def main():
         move_col = int(lets_to_nums[move_col_a])
         
         
+        
+     
         # this moves the piece to where the user wants 
         # first the inputted row number must be converted to the actual index
         board[8 - move_row][move_col] = board[8 - piece_row][piece_col]
@@ -132,18 +132,91 @@ def main():
         # first the inputted row number must be converted to the actual index
         board[8 - piece_row][piece_col] = "__"
         
-        #displays updated board
-        print_grid(board)
         
-        
-        
-        # alternates player turns
-        if user_turn == "white":
-            user_turn = "black"
+        #ensure the move the player wants to make is allowed
+        if check_valid(board, move_row, move_col, user_turn, piece_row, piece_col) == False:
+            print("That is not a valid move sorry, please review the rules of chess.")
             
         else:
-            user_turn = "white"
-       
+            #displays updated board
+            print_grid(board)
+      
+            # alternates player turns
+            if user_turn == "white":
+                user_turn = "black"
+            
+            else:
+                user_turn = "white"
+            
+            
+
+
+def error_check(board, move_row, move_col, user_turn):
+    """this function will return False if a user places their piece onto 
+    another one of their pieces"""
+    
+    if board[8 - move_row][move_col] in white.values() and user_turn == "white":
+        print("Sorry! One of your pieces is already there")
+        return False
+            
+    elif board[8 - move_row][move_col] in black.values() and user_turn == "black":
+        print("Sorry! One of your pieces is already there")
+        return False
+    
+    return True
+
+def path_clear(piece_row, move_row, board):
+    """
+    This function returns true if the path between the chessman's current position
+    and the one it wants to move to is clear.
+    
+    """
+    for row in range(piece_row + 1, move_row):
+        if board[row]== "__":
+            return True
+    return False
+    
+
+
+def rooks(board, move_row, move_col, user_turn, piece_row, piece_col):
+    """
+    This function returns False if the player wants to move their rook
+    to an invalid position and True otherwise
+    
+    """
+    # check that the rook only moves horizontally or vertically
+    
+    if board[8 - piece_row][piece_col] == white[3] or board[8 - piece_row][piece_col] == black[3]:
+        if board[8 - piece_row]== board[8 - move_row]:
+            return  True
+    
+        elif board[8 - piece_col]== board[8 - move_col]:
+            return True
+    
+    # check that the rook can't jump over existing pieces
+    if path_clear(piece_row, move_row, board):
+        True
+    
+    return False
+
+
+def check_valid(board, move_row, move_col, user_turn,piece_row, piece_col):
+    """
+    This is a function that returns true if the user's moves are allowed
+    according to the rules of chess.
+    
+    """
+    if error_check(board, move_row, move_col, user_turn) == False:
+        return False
+    if rooks(board, move_row, move_col, user_turn, piece_row, piece_col) == False:
+        return False
+    
+    return True
+    
+    
+   
+
+
 
 if __name__ == "__main__":
     main()
